@@ -10,7 +10,10 @@ let
       pnglatex # I think this doesn't work, I wonder if I have to package a latex distro with my neovim. that would suck
       ipython
     ];
-    extraPackages = p: with p; [ imageMagick ];
+    extraPackages = p: with p; [
+      imageMagick
+      # lua-language-server # this doesn't work
+    ];
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
@@ -29,5 +32,12 @@ in {
     })
   ];
 
-  environment.systemPackages = with pkgs; [ neovim-custom ];
+  environment.systemPackages = with pkgs; [
+    neovim-custom
+
+    # I'm installing language servers here, they will be installed globally, b/c idk how to just
+    # install them so that neovim can see them
+    lua-language-server
+    stylua
+  ];
 }
