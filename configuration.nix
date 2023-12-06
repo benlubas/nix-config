@@ -138,15 +138,21 @@
     description = "Ben Lubas";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+      blender
       btop
       ffmpeg_6-full
       flameshot
       gh
+      globalprotect-openconnect
       google-chrome
       heroic
       imagemagick
+      inkscape
       kitty
+      lazygit
+      losslesscut-bin
       neofetch
+      obs-studio
       quarto
       spotify
       steam
@@ -193,6 +199,8 @@
     openssl
     python3
     ripgrep
+    appimage-run
+    steam-run
     rustup
     stdenv
     texlive.combined.scheme-full

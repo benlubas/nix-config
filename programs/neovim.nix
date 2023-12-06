@@ -9,6 +9,7 @@ let
       cairosvg
       pnglatex # I think this doesn't work, I wonder if I have to package a latex distro with my neovim. that would suck
       ipython
+      nbformat
     ];
     extraPackages = p: with p; [
       imageMagick
@@ -25,8 +26,6 @@ in {
     (_: super: {
       neovim-custom = pkgs.wrapNeovimUnstable
         (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
-          # NOTE: the version here doesn't actually do anything, it always build 9.4
-          version = "stable";
           buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
         })) config;
     })
@@ -38,6 +37,10 @@ in {
     # I'm installing language servers here, they will be installed globally, b/c idk how to just
     # install them so that neovim can see them
     lua-language-server
+    nodePackages.prettier
     stylua
+
+    # I can't install this with the rest of the python packages b/c this needs to be in path
+    python3Packages.jupytext
   ];
 }
