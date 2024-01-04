@@ -7,7 +7,7 @@ let
       pynvim
       jupyter-client
       cairosvg
-      pnglatex # I think this doesn't work, I wonder if I have to package a latex distro with my neovim. that would suck
+      # pnglatex # I think this doesn't work, I wonder if I have to package a latex distro with my neovim. that would suck
       ipython
       nbformat
     ];

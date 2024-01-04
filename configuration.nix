@@ -154,6 +154,7 @@
       neofetch
       obs-studio
       quarto
+      super-slicer-latest
       spotify
       steam
       vlc
@@ -167,6 +168,7 @@
   services.flatpak.enable = true;
   xdg.portal = {
     enable = true;
+    config.common.default = "*";
     extraPortals = [ pkgs.xdg-desktop-portal-kde ];
   };
 
