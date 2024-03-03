@@ -15,7 +15,10 @@
     # Official NixOS package source, using nixos-unstable branch here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # NOTE: I've removed the home manager input. Would like to just do everything with pure nix
+    # Spicetify flake
+    spicetify-nix.url = "github:the-argus/spicetify-nix";
+
+# NOTE: I've removed the home manager input. Would like to just do everything with pure nix
   };
 
   # `outputs` are all the build result of the flake.
@@ -88,6 +91,7 @@
           # old configuration file can still take effect.
           # Note: configuration.nix itself is also a Nix Module,
           ./configuration.nix
+          ./programs/spicetify.nix
         ];
       };
     };

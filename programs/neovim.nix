@@ -38,7 +38,11 @@ in {
     # install them so that neovim can see them
     lua-language-server
     nodePackages.prettier
+    nodePackages.pyright
     stylua
+
+    iruby
+    python3Packages.ilua
 
     # I can't install this with the rest of the python packages b/c this needs to be in path
     python3Packages.jupytext

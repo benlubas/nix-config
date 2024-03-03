@@ -14,20 +14,75 @@
     ];
 
   # Bootloader
+  # boot.loader = {
+  #   systemd-boot = {
+  #     enable = true;
+  #     # configurationLimit = 10;
+  #   };
+  #   efi.canTouchEfiVariables = true;
+  # };
+
   boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 10;
+    efi = {
+      canTouchEfiVariables = true;
+      # assuming /boot is the mount point of the  EFI partition in NixOS (as the installation section recommends).
+      efiSysMountPoint = "/boot";
     };
-    efi.canTouchEfiVariables = true;
+    grub = {
+      # despite what the configuration.nix manpage seems to indicate,
+      # as of release 17.09, setting device to "nodev" will still call
+      # `grub-install` if efiSupport is true
+      # (the devices list is not used by the EFI grub install,
+      # but must be set to some value in order to pass an assert in grub.nix)
+      devices = [ "nodev" ];
+      efiSupport = true;
+      enable = true;
+      # set $FS_UUID to the UUID of the EFI partition
+      extraEntries = ''
+        menuentry "Windows" {
+          insmod part_gpt
+          insmod fat
+          insmod search_fs_uuid
+          insmod chain
+          search --fs-uuid --set=root 9041-0C58
+          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
+    };
   };
+
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
 
   # Perform garbage collection weekly to maintain low disk usage
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 2w";
- };
+  };
+
+  services = {
+    syncthing = {
+      enable = true;
+      user = "benlubas";
+      dataDir = "/home/benlubas/notes";    # Default folder for new synced folders
+      configDir = "/home/benlubas/.config/syncthing";
+      overrideDevices = true;     # overrides any devices added or deleted through the WebUI
+      overrideFolders = true;     # overrides any folders added or deleted through the WebUI
+      settings = {
+        devices = {
+          "s22" = { id = "ZIV6ZCV-XOOJHCB-UOQXICZ-H22CH3E-T4C6YJH-674JDUM-4QXN7YV-25ALWQT"; };
+          "MacBookAir" = { id = "UAHJ72Y-GFBAEJD-EJ22EZS-X6T3FRI-2GPTNNM-JWBSZG4-ROCFHMI-RWJCNAZ"; };
+        };
+        folders = {
+          "Notes" = {         # Name of folder in Syncthing, also the folder ID
+            path = "/home/benlubas/notes";    # Which folder to add to Syncthing
+            devices = [ "s22" ];      # Which devices to share the folder with
+          };
+        };
+      };
+    };
+  };
 
   networking.hostName = "nixos"; # Define your hostname
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant
@@ -139,6 +194,7 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       blender
+      brave
       btop
       ffmpeg_6-full
       flameshot
@@ -148,15 +204,21 @@
       heroic
       imagemagick
       inkscape
+      jetbrains.rider
       kitty
       lazygit
       losslesscut-bin
       neofetch
       obs-studio
+      mono
+      pandoc
+      qmk
       quarto
       super-slicer-latest
-      spotify
+      # spicetify-cli
+      # spotify
       steam
+      typst
       vlc
     ];
   };
@@ -174,7 +236,17 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
+
+  environment.systemPackages = with pkgs;
+  let
+    R-with-packages = rWrapper.override { packages = with rPackages; [
+      xml2
+      lintr
+      roxygen2
+      languageserver
+    ];
+  }; in [
+    R-with-packages
     bat
     cargo
     cinnamon.nemo # gui file browser
@@ -184,20 +256,26 @@
     delta
     direnv
     dunst
+    exfatprogs
+    gparted
     fd
+    rustup
     feh
     firefox
     fnm
+    efibootmgr
     fzf
     gcc
     gdb
     git
+    quickemu
     gnumake
     jdk17
     killall
     libcxxStdenv
     libstdcxx5
     nodejs
+    ntfs3g
     openssl
     python3
     ripgrep
@@ -208,6 +286,7 @@
     texlive.combined.scheme-full
     tmux
     tty-clock
+    R
     unzip
     valgrind
     wget
