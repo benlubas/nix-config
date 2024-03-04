@@ -204,6 +204,7 @@
       heroic
       imagemagick
       inkscape
+      iruby
       jetbrains.rider
       kitty
       lazygit
@@ -246,7 +247,9 @@
       languageserver
     ];
   }; in [
+    R
     R-with-packages
+    appimage-run
     bat
     cargo
     cinnamon.nemo # gui file browser
@@ -256,20 +259,18 @@
     delta
     direnv
     dunst
+    efibootmgr
     exfatprogs
-    gparted
     fd
-    rustup
     feh
     firefox
     fnm
-    efibootmgr
     fzf
     gcc
     gdb
     git
-    quickemu
     gnumake
+    gparted
     jdk17
     killall
     libcxxStdenv
@@ -278,15 +279,15 @@
     ntfs3g
     openssl
     python3
+    quickemu
     ripgrep
-    appimage-run
-    steam-run
+    rustup
     rustup
     stdenv
+    steam-run
     texlive.combined.scheme-full
     tmux
     tty-clock
-    R
     unzip
     valgrind
     wget
