@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "dots": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1708444380,
+        "narHash": "sha256-f1kTAVwH7NZIkyQQZGmayPtImHUxOCdcWDcMr3RmaPI=",
+        "owner": "benlubas",
+        "repo": ".dotfiles",
+        "rev": "c0d720682df9eae944aa3b59c6049a5afa15a978",
+        "type": "github"
+      },
+      "original": {
+        "owner": "benlubas",
+        "repo": ".dotfiles",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -34,27 +50,11 @@
         "type": "github"
       }
     },
-    "remote-lua-config": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1708444380,
-        "narHash": "sha256-f1kTAVwH7NZIkyQQZGmayPtImHUxOCdcWDcMr3RmaPI=",
-        "owner": "benlubas",
-        "repo": ".dotfiles",
-        "rev": "c0d720682df9eae944aa3b59c6049a5afa15a978",
-        "type": "github"
-      },
-      "original": {
-        "owner": "benlubas",
-        "repo": ".dotfiles",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
+        "dots": "dots",
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs",
-        "remote-lua-config": "remote-lua-config"
+        "nixpkgs": "nixpkgs"
       }
     },
     "systems": {

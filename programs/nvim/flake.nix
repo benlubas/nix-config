@@ -3,7 +3,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    remote-lua-config = {
+    dots = {
       # TODO: figure out how to clone only the nvim folder
       # ?dir=nvim doesn't seem to work when `flake=false`;
       url = "github:benlubas/.dotfiles";
@@ -23,6 +23,8 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        localDotsPath = "/home/benlubas/github/.dotfiles";
+        dotsPath = if builtins.pathExists localDotsPath then localDotsPath else "${inputs.dots}";
         binpath = nixpkgs.lib.makeBinPath (with pkgs; [
           # Language Servers
           lua-language-server
@@ -37,7 +39,7 @@
           fzf
           python3Packages.jupytext
           ripgrep
-        ]);
+        ] ++ [dotsPath]);
         neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
           extraLuaPackages = p: [ p.magick ];
           extraPython3Packages = p: with p; [
@@ -54,7 +56,7 @@
           withRuby = true;
           withPython3 = true;
           # Source my lua config
-          customRC = "luafile ${inputs.remote-lua-config}/nvim/init.lua";
+          customRC = "luafile ${dotsPath}/nvim/init.lua";
         };
 
         neovim-custom =
