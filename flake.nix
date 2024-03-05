@@ -32,6 +32,7 @@
   # The `@` syntax here is used to alias the attribute set of the
   # inputs' parameter, making it convenient to use inside the function.
   outputs = { self, nixpkgs, ... }@inputs: {
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
     nixosConfigurations = {
       # By default, NixOS will try to refer the nixosConfiguration with
       # its hostname, so the system named `nixos` will use this one.

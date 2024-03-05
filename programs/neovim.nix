@@ -31,15 +31,17 @@ let
     # https://github.com/NixOS/nixpkgs/issues/211998
     customRC = "luafile ~/.config/nvim/init.lua";
   };
-in {
+in
+{
   nixpkgs.overlays = [
     (_: super: {
       neovim-custom = pkgs.wrapNeovimUnstable
         (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
           buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
-        })) (neovimConfig // {
+        }))
+        (neovimConfig // {
           wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs
-           + " --prefix PATH : ${binpath}";
+            + " --prefix PATH : ${binpath}";
         });
     })
   ];

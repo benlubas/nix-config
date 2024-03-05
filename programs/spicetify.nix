@@ -9,7 +9,7 @@ in
   ];
 
   # import the flake's module for your system
-  imports = [ spicetify-nix.nixosModule];
+  imports = [ spicetify-nix.nixosModule ];
 
   # configure spicetify
   programs.spicetify =
