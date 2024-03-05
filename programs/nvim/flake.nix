@@ -4,18 +4,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     dots = {
-      # TODO: figure out how to clone only the nvim folder
-      # ?dir=nvim doesn't seem to work when `flake=false`;
       url = "github:benlubas/.dotfiles";
       flake = false;
     };
-    # TODO: try and figure out a way to use the local configuration I guess.
-    # local-lua-config = {
-    #   url = "path:${config-path}";
-    #   flake = false;
-    # };
   };
-  # TODO: expose `tmux-sessionizer` script from .dotfiles/bin to neovim.
 
   outputs =
     { nixpkgs, flake-utils, ... }@inputs:
@@ -23,6 +15,8 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        # there is no way that I can find to evaluate "$HOME" in a pure flake.
+        # so this can't work by default on macOS for example
         localDotsPath = "/home/benlubas/github/.dotfiles";
         dotsPath = if builtins.pathExists localDotsPath then localDotsPath else "${inputs.dots}";
         binpath = nixpkgs.lib.makeBinPath (with pkgs; [
