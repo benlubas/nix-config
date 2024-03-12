@@ -217,15 +217,24 @@
       quarto
       super-slicer-latest
       # spicetify-cli
-      # spotify
+      # spotify # Using a Spicetify flake
       steam
+      wine
+      wine64
       typst
       vlc
     ];
   };
 
-# Allow unfree packages
+  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  # HACK: to get around dynamic linking issues I think
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # Add any missing dynamic libraries for unpackaged programs
+    # here, NOT in environment.systemPackages
+  ];
 
 # install flatpack (for flatpack discord)
   services.flatpak.enable = true;
@@ -269,6 +278,7 @@
     gcc
     gdb
     git
+    jujutsu
     gnumake
     gparted
     jdk17
