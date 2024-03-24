@@ -10,17 +10,9 @@
   imports =
     [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./programs/neovim.nix
     ];
 
   # Bootloader
-  # boot.loader = {
-  #   systemd-boot = {
-  #     enable = true;
-  #     # configurationLimit = 10;
-  #   };
-  #   efi.canTouchEfiVariables = true;
-  # };
 
   boot.loader = {
     efi = {
@@ -116,8 +108,10 @@
   services.xserver = {
     enable = true;
     # Configure keymap in X11
-    layout = "us";
-    xkbVariant = "";
+    xkb = {
+      variant = "";
+      layout = "us";
+    };
 
     desktopManager = {
       xterm.enable = false;
@@ -140,8 +134,8 @@
       enable = true;
       extraPackages = with pkgs; [
         rofi #application launcher
-          i3lock #default i3 screen locker
-          polybar
+        i3lock #default i3 screen locker
+        polybar
       ];
     };
   };
@@ -169,19 +163,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-
-  # nixpkgs.overlays = [
-  #   (import (builtins.fetchTarball {
-  #     url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-  #   }))
-  # ];
-
-  # programs.neovim = {
-  #   enable = true;
-  #   defaultEditor = true;
-  #   package = neovim.packages."${pkgs.system}".neovim;
-  # };
-
   programs.zsh.enable = true;
 
   users.defaultUserShell = pkgs.zsh;
@@ -205,19 +186,15 @@
       imagemagick
       inkscape
       iruby
-      jetbrains.rider
       kitty
       lazygit
       losslesscut-bin
       neofetch
       obs-studio
-      mono
+      fontforge-gtk
       pandoc
       qmk
       quarto
-      super-slicer-latest
-      # spicetify-cli
-      # spotify # Using a Spicetify flake
       steam
       wine
       wine64
@@ -230,11 +207,11 @@
   nixpkgs.config.allowUnfree = true;
 
   # HACK: to get around dynamic linking issues I think
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    # Add any missing dynamic libraries for unpackaged programs
-    # here, NOT in environment.systemPackages
-  ];
+  # programs.nix-ld.enable = true;
+  # programs.nix-ld.libraries = with pkgs; [
+  #   # Add any missing dynamic libraries for unpackaged programs
+  #   # here, NOT in environment.systemPackages
+  # ];
 
 # install flatpack (for flatpack discord)
   services.flatpak.enable = true;
@@ -304,12 +281,21 @@
     xclip
   ];
 
+  fonts.packages = with pkgs; let
+    # TODO: still need to patch this font, and add the bold/italic versions when I finish them
+    lafayette-mono = pkgs.stdenv.mkDerivation {
+      name = "lafayette-mono";
+      version = "0.001";
+      src = ./fonts;
 
-  # fonts
-  fonts.packages = with pkgs; [
+      installPhase = ''
+        mkdir -p $out/share/fonts/opentype
+        cp -r Lafayette_Mono.otf $out/share/fonts/opentype
+      '';
+    }; in [
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    lafayette-mono
   ];
-
 
   # Enable OpenGL
   hardware.opengl = {

@@ -1,4 +1,4 @@
-{ lib, pkgs, neovimUtils, wrapNeovimUnstable, ... }:
+{ lib, pkgs, neovimUtils, wrapNeovimUnstable, neovim-nightly-src, ... }:
 
 let
   binpath = lib.makeBinPath (with pkgs; [
@@ -36,8 +36,11 @@ in
   nixpkgs.overlays = [
     (_: super: {
       neovim-custom = pkgs.wrapNeovimUnstable
+        # This crashes like crazy
+        # (neovim-nightly.overrideAttrs (oldAttrs: {
         (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
           buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
+          src = neovim-nightly-src;
         }))
         (neovimConfig // {
           wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs

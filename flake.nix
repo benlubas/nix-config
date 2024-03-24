@@ -18,7 +18,14 @@
     # Spicetify flake
     spicetify-nix.url = "github:the-argus/spicetify-nix";
 
-# NOTE: I've removed the home manager input. Would like to just do everything with pure nix
+    # Source to build neovim. Current (as of 2024/03/24) crashes
+    # this is consumed in ./programs/neovim.nix
+    neovim-nightly-src = {
+      url = "github:neovim/neovim/dc7ccd6bca81dfa6ade6462a6e30770c63d48266";
+      flake = false;
+    };
+
+    # NOTE: I've removed the home manager input. Would like to just do everything with pure nix
   };
 
   # `outputs` are all the build result of the flake.
@@ -86,6 +93,7 @@
         # `specialArgs`.
         # you must use `specialArgs` by uncomment the following line:
         #
+        # These can be accessed in the function signature by the key in the inputs table
         specialArgs = inputs;
         modules = [
           # Import the configuration.nix here, so that the
@@ -93,6 +101,7 @@
           # Note: configuration.nix itself is also a Nix Module,
           ./configuration.nix
           ./programs/spicetify.nix
+          ./programs/neovim.nix
         ];
       };
     };
