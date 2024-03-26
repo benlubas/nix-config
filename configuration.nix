@@ -2,15 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-stable, lafayette-mono, ... }:
 
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  imports =
-    [ # Include the results of the hardware scan.
+  imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ];
+  ];
 
   # Bootloader
 
@@ -57,19 +56,27 @@
     syncthing = {
       enable = true;
       user = "benlubas";
-      dataDir = "/home/benlubas/notes";    # Default folder for new synced folders
+      dataDir = "/home/benlubas/notes"; # Default folder for new synced folders
       configDir = "/home/benlubas/.config/syncthing";
-      overrideDevices = true;     # overrides any devices added or deleted through the WebUI
-      overrideFolders = true;     # overrides any folders added or deleted through the WebUI
+      overrideDevices =
+        true; # overrides any devices added or deleted through the WebUI
+      overrideFolders =
+        true; # overrides any folders added or deleted through the WebUI
       settings = {
         devices = {
-          "s22" = { id = "ZIV6ZCV-XOOJHCB-UOQXICZ-H22CH3E-T4C6YJH-674JDUM-4QXN7YV-25ALWQT"; };
-          "MacBookAir" = { id = "UAHJ72Y-GFBAEJD-EJ22EZS-X6T3FRI-2GPTNNM-JWBSZG4-ROCFHMI-RWJCNAZ"; };
+          "s22" = {
+            id =
+              "ZIV6ZCV-XOOJHCB-UOQXICZ-H22CH3E-T4C6YJH-674JDUM-4QXN7YV-25ALWQT";
+          };
+          "MacBookAir" = {
+            id =
+              "UAHJ72Y-GFBAEJD-EJ22EZS-X6T3FRI-2GPTNNM-JWBSZG4-ROCFHMI-RWJCNAZ";
+          };
         };
         folders = {
-          "Notes" = {         # Name of folder in Syncthing, also the folder ID
-            path = "/home/benlubas/notes";    # Which folder to add to Syncthing
-            devices = [ "s22" ];      # Which devices to share the folder with
+          "Notes" = { # Name of folder in Syncthing, also the folder ID
+            path = "/home/benlubas/notes"; # Which folder to add to Syncthing
+            devices = [ "s22" ]; # Which devices to share the folder with
           };
         };
       };
@@ -113,9 +120,7 @@
       layout = "us";
     };
 
-    desktopManager = {
-      xterm.enable = false;
-    };
+    desktopManager = { xterm.enable = false; };
 
     libinput = {
       enable = true;
@@ -125,16 +130,14 @@
     autoRepeatInterval = 22;
     displayManager = {
       defaultSession = "none+i3";
-      lightdm = {
-        enable = true;
-      };
+      lightdm = { enable = true; };
     };
 
     windowManager.i3 = {
       enable = true;
       extraPackages = with pkgs; [
-        rofi #application launcher
-        i3lock #default i3 screen locker
+        rofi # application launcher
+        i3lock # default i3 screen locker
         polybar
       ];
     };
@@ -186,11 +189,11 @@
       imagemagick
       inkscape
       iruby
-      kitty
+      pkgs-stable.kitty
       lazygit
       losslesscut-bin
       neofetch
-      obs-studio
+      pkgs-stable.obs-studio
       fontforge-gtk
       pandoc
       qmk
@@ -213,7 +216,7 @@
   #   # here, NOT in environment.systemPackages
   # ];
 
-# install flatpack (for flatpack discord)
+  # install flatpack (for flatpack discord)
   services.flatpak.enable = true;
   xdg.portal = {
     enable = true;
@@ -225,77 +228,65 @@
   # $ nix search wget
 
   environment.systemPackages = with pkgs;
-  let
-    R-with-packages = rWrapper.override { packages = with rPackages; [
-      xml2
-      lintr
-      roxygen2
-      languageserver
+    let
+      R-with-packages = rWrapper.override {
+        packages = with rPackages; [ xml2 lintr roxygen2 languageserver ];
+      };
+    in [
+      R
+      R-with-packages
+      appimage-run
+      bat
+      cargo
+      cinnamon.nemo # gui file browser
+      clang
+      clang-tools_9
+      curl
+      delta
+      direnv
+      dunst
+      efibootmgr
+      exfatprogs
+      fd
+      feh
+      firefox
+      fnm
+      fzf
+      gcc
+      gdb
+      git
+      jujutsu
+      gnumake
+      gparted
+      jdk17
+      killall
+      libcxxStdenv
+      libstdcxx5
+      nodejs
+      ntfs3g
+      openssl
+      python3
+      quickemu
+      ripgrep
+      rustup
+      rustup
+      stdenv
+      steam-run
+      texlive.combined.scheme-full
+      tmux
+      tty-clock
+      unzip
+      valgrind
+      wget
+      xclip
     ];
-  }; in [
-    R
-    R-with-packages
-    appimage-run
-    bat
-    cargo
-    cinnamon.nemo # gui file browser
-    clang
-    clang-tools_9
-    curl
-    delta
-    direnv
-    dunst
-    efibootmgr
-    exfatprogs
-    fd
-    feh
-    firefox
-    fnm
-    fzf
-    gcc
-    gdb
-    git
-    jujutsu
-    gnumake
-    gparted
-    jdk17
-    killall
-    libcxxStdenv
-    libstdcxx5
-    nodejs
-    ntfs3g
-    openssl
-    python3
-    quickemu
-    ripgrep
-    rustup
-    rustup
-    stdenv
-    steam-run
-    texlive.combined.scheme-full
-    tmux
-    tty-clock
-    unzip
-    valgrind
-    wget
-    xclip
-  ];
 
-  fonts.packages = with pkgs; let
-    # TODO: still need to patch this font, and add the bold/italic versions when I finish them
-    lafayette-mono = pkgs.stdenv.mkDerivation {
-      name = "lafayette-mono";
-      version = "0.001";
-      src = ./fonts;
-
-      installPhase = ''
-        mkdir -p $out/share/fonts/opentype
-        cp -r Lafayette_Mono.otf $out/share/fonts/opentype
-      '';
-    }; in [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-    lafayette-mono
-  ];
+  fonts.packages = with pkgs;
+    let lafayette-mono-font = lafayette-mono.packages.${pkgs.system}.default;
+    in [
+      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      lafayette-mono-font
+    ];
 
   # Enable OpenGL
   hardware.opengl = {
@@ -305,11 +296,11 @@
   };
 
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
 
-  # Modesetting is required.
+    # Modesetting is required.
     modesetting.enable = true;
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
@@ -335,31 +326,31 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-# Some programs need SUID wrappers, can be configured further or are
-# started in user sessions.
-# programs.mtr.enable = true;
-# programs.gnupg.agent = {
-#   enable = true;
-#   enableSSHSupport = true;
-# };
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
 
-# List services that you want to enable:
+  # List services that you want to enable:
 
-# Enable the OpenSSH daemon.
-# services.openssh.enable = true;
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
 
-# Open ports in the firewall.
-# networking.firewall.allowedTCPPorts = [ ... ];
-# networking.firewall.allowedUDPPorts = [ ... ];
-# Or disable the firewall altogether.
-# networking.firewall.enable = false;
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
 
-# This value determines the NixOS release from which the default
-# settings for stateful data, like file locations and database versions
-# on your system were taken. It‘s perfectly fine and recommended to leave
-# this value at the release version of the first install of this system.
-# Before changing this value read the documentation for this option
-# (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
 }

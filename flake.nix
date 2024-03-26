@@ -15,6 +15,8 @@
     # Official NixOS package source, using nixos-unstable branch here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+
     # Spicetify flake
     spicetify-nix.url = "github:the-argus/spicetify-nix";
 
@@ -25,7 +27,7 @@
       flake = false;
     };
 
-    # NOTE: I've removed the home manager input. Would like to just do everything with pure nix
+    lafayette-mono.url = "git+ssh://git@github.com/benlubas/LafayetteMono.git?ref=main";
   };
 
   # `outputs` are all the build result of the flake.
@@ -38,7 +40,7 @@
   #
   # The `@` syntax here is used to alias the attribute set of the
   # inputs' parameter, making it convenient to use inside the function.
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-stable, ... }@inputs: {
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
     nixosConfigurations = {
       # By default, NixOS will try to refer the nixosConfiguration with
@@ -52,7 +54,7 @@
       # Run the following command in the flake's directory to
       # deploy this configuration on any NixOS system:
       #   sudo nixos-rebuild switch --flake .#nixos
-      "nixos" = nixpkgs.lib.nixosSystem {
+      "nixos" = nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
 
         # The Nix module system can modularize configuration,
@@ -94,7 +96,15 @@
         # you must use `specialArgs` by uncomment the following line:
         #
         # These can be accessed in the function signature by the key in the inputs table
-        specialArgs = inputs;
+        specialArgs = {
+          pkgs-stable = import nixpkgs-stable {
+            # Refer to the `system` parameter from the outer scope recursively
+            inherit system;
+            config.allowUnfree = true;
+          };
+          # spicetify-nix = inputs.spicetify-nix;
+          # neovim-nightly-src = inputs.neovim-nightly-src;
+        } // inputs;
         modules = [
           # Import the configuration.nix here, so that the
           # old configuration file can still take effect.

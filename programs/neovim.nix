@@ -1,9 +1,12 @@
-{ lib, pkgs, neovimUtils, wrapNeovimUnstable, neovim-nightly-src, ... }:
+{ lib, pkgs, neovim-nightly-src, ... }:
 
 let
   binpath = lib.makeBinPath (with pkgs; [
     lua-language-server
     stylua
+    lua # required for luarocks.nvim to work
+    nil # nix-ls
+    nixfmt
 
     nodePackages.prettier
     nodePackages.pyright
@@ -17,13 +20,11 @@ let
       pynvim
       jupyter-client
       cairosvg
-      # pnglatex # I think this doesn't work, I wonder if I have to package a latex distro with my neovim. that would suck
       ipython
       nbformat
     ];
     extraPackages = p: with p; [
       imageMagick
-      # lua-language-server # this doesn't work
     ];
     withNodeJs = true;
     withRuby = true;
@@ -36,7 +37,6 @@ in
   nixpkgs.overlays = [
     (_: super: {
       neovim-custom = pkgs.wrapNeovimUnstable
-        # This crashes like crazy
         # (neovim-nightly.overrideAttrs (oldAttrs: {
         (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
           buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
