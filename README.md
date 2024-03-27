@@ -1,2 +1,3 @@
 # nix-config
-nix configuration
+
+Just a nix configuration.

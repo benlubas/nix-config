@@ -27,7 +27,8 @@
       flake = false;
     };
 
-    lafayette-mono.url = "git+ssh://git@github.com/benlubas/LafayetteMono.git?ref=main";
+    lafayette-mono.url =
+      "git+ssh://git@github.com/benlubas/LafayetteMono.git?ref=main";
   };
 
   # `outputs` are all the build result of the flake.

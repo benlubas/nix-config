@@ -16,40 +16,42 @@ let
   ]);
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     extraLuaPackages = p: [ p.magick ];
-    extraPython3Packages = p: with p; [
-      pynvim
-      jupyter-client
-      cairosvg
-      ipython
-      nbformat
-    ];
-    extraPackages = p: with p; [
-      imageMagick
-    ];
+    extraPython3Packages = p:
+      with p; [
+        pynvim
+        jupyter-client
+        cairosvg
+        ipython
+        nbformat
+      ];
+    extraPackages = p: with p; [ imageMagick ];
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
     # https://github.com/NixOS/nixpkgs/issues/211998
     customRC = "luafile ~/.config/nvim/init.lua";
   };
-in
-{
+  fullConfig = (neovimConfig // {
+    wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs
+      + " --prefix PATH : ${binpath}";
+  });
+in {
   nixpkgs.overlays = [
     (_: super: {
-      neovim-custom = pkgs.wrapNeovimUnstable
-        # (neovim-nightly.overrideAttrs (oldAttrs: {
+      neovim-nightly = pkgs.wrapNeovimUnstable
         (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
           buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
           src = neovim-nightly-src;
-        }))
-        (neovimConfig // {
-          wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs
-            + " --prefix PATH : ${binpath}";
-        });
+        })) fullConfig;
+      neovim-stable = pkgs.wrapNeovimUnstable
+        (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
+          buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
+        })) fullConfig;
     })
   ];
 
   environment.systemPackages = with pkgs; [
-    neovim-custom
+    neovim-nightly
+    (writeScriptBin "nvim_stable" ''${neovim-stable}/bin/nvim "$@"'')
   ];
 }
