@@ -135,7 +135,7 @@
 
     windowManager.i3 = {
       enable = true;
-      extraPackages = with pkgs; [
+      extraPackages = with pkgs-stable; [
         rofi # application launcher
         i3lock # default i3 screen locker
         polybar
@@ -176,34 +176,40 @@
     shell = pkgs.zsh;
     description = "Ben Lubas";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      blender
-      brave
-      btop
-      ffmpeg_6-full
-      flameshot
-      gh
-      globalprotect-openconnect
-      google-chrome
-      heroic
-      imagemagick
-      inkscape
-      iruby
-      pkgs-stable.kitty
-      lazygit
-      losslesscut-bin
-      neofetch
-      pkgs-stable.obs-studio
-      fontforge-gtk
-      pandoc
-      qmk
-      quarto
-      steam
-      wine
-      wine64
-      typst
-      vlc
-    ];
+    packages = with pkgs;
+    # unstable packages:
+      [
+        blender
+        brave
+        btop
+        gh
+        google-chrome
+        heroic
+        kitty
+        pandoc
+        qmk
+        steam
+        wine
+        wine64
+        typst
+
+      ] ++
+      # stable packages
+      (with pkgs-stable; [
+        ffmpeg_6-full
+        flameshot
+        globalprotect-openconnect
+        imagemagick
+        inkscape
+        iruby
+        lazygit
+        losslesscut-bin
+        neofetch
+        obs-studio
+        fontforge-gtk
+        quarto
+        vlc
+      ]);
   };
 
   # Allow unfree packages
@@ -227,35 +233,30 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
 
-  environment.systemPackages = with pkgs;
+  environment.systemPackages = with pkgs-stable;
     let
       R-with-packages = rWrapper.override {
         packages = with rPackages; [ xml2 lintr roxygen2 languageserver ];
       };
     in [
+      # STABLE PACKAGES
       R
       R-with-packages
       appimage-run
       bat
-      cargo
       cinnamon.nemo # gui file browser
       clang
       clang-tools_9
       curl
-      delta
-      direnv
       dunst
       efibootmgr
       exfatprogs
-      fd
       feh
-      firefox
       fnm
       fzf
       gcc
       gdb
       git
-      jujutsu
       gnumake
       gparted
       jdk17
@@ -268,27 +269,35 @@
       python3
       quickemu
       ripgrep
-      rustup
-      rustup
       stdenv
-      steam-run
       texlive.combined.scheme-full
-      tmux
       tty-clock
       unzip
       valgrind
       wget
       xclip
-    ];
+    ] ++ (with pkgs; [
+      # UNSTABLE PACKAGES
+      tmux
+      steam-run
+      rustup
+      jujutsu
+      firefox
+      fd
+      direnv
+      delta
+      cargo
+    ]);
 
-  fonts.packages = with pkgs;
+  fonts.packages =
     let lafayette-mono-font = lafayette-mono.packages.${pkgs.system}.default;
     in [
-      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      (pkgs-stable.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
       lafayette-mono-font
     ];
 
   # Enable OpenGL
+  # required for: kitty
   hardware.opengl = {
     enable = true;
     driSupport = true;

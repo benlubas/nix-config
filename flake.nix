@@ -103,8 +103,6 @@
             inherit system;
             config.allowUnfree = true;
           };
-          # spicetify-nix = inputs.spicetify-nix;
-          # neovim-nightly-src = inputs.neovim-nightly-src;
         } // inputs;
         modules = [
           # Import the configuration.nix here, so that the
