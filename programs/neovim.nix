@@ -24,7 +24,7 @@ let
         ipython
         nbformat
       ];
-    extraPackages = p: with p; [ imageMagick ];
+    extraPackages = p: with p; [ imagemagick gcc ];
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
