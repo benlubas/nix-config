@@ -190,7 +190,7 @@
         qmk
         steam
         wine
-        wine64
+        # wine64
         typst
 
       ] ++
@@ -208,6 +208,7 @@
         obs-studio
         fontforge-gtk
         quarto
+        wine64
         vlc
       ]);
   };
@@ -263,6 +264,7 @@
       killall
       libcxxStdenv
       libstdcxx5
+      libusb1
       nodejs
       ntfs3g
       openssl

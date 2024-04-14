@@ -23,7 +23,8 @@
     # Source to build neovim. Current (as of 2024/03/24) crashes
     # this is consumed in ./programs/neovim.nix
     neovim-nightly-src = {
-      url = "github:neovim/neovim/dc7ccd6bca81dfa6ade6462a6e30770c63d48266";
+      # url = "github:neovim/neovim/dc7ccd6bca81dfa6ade6462a6e30770c63d48266";
+      url = "github:neovim/neovim";
       flake = false;
     };
 
