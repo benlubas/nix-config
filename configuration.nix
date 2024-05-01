@@ -122,10 +122,6 @@
 
     desktopManager = { xterm.enable = false; };
 
-    libinput = {
-      enable = true;
-      mouse.accelProfile = "flat"; # disabling mouse acceleration
-    };
     autoRepeatDelay = 250;
     autoRepeatInterval = 22;
     displayManager = {
@@ -140,6 +136,11 @@
         polybar
       ];
     };
+  };
+
+  services.libinput = {
+    enable = true;
+    mouse.accelProfile = "flat"; # disabling mouse acceleration
   };
 
   services.displayManager = {
@@ -173,6 +174,14 @@
 
   users.defaultUserShell = pkgs.zsh;
 
+  ### gaming settings ###
+  programs.steam.enable = true;
+  # This \/ requires more finikey commands, and I'm not sure how much performance I would get out of
+  # it.
+  # programs.steam.gamescopeSession.enable = true;
+  # NOTE: requires "gamemoderun %command%" as `run args` in steam (for each game)
+  programs.gamemode.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.benlubas = {
     isNormalUser = true;
@@ -191,7 +200,6 @@
         kitty
         pandoc
         qmk
-        steam
         wine
         # wine64
         typst
