@@ -129,7 +129,6 @@
     autoRepeatDelay = 250;
     autoRepeatInterval = 22;
     displayManager = {
-      defaultSession = "none+i3";
       lightdm = { enable = true; };
     };
 
@@ -143,11 +142,15 @@
     };
   };
 
+  services.displayManager = {
+    defaultSession = "none+i3";
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  sound.enable = false; # this is apparently meant for pulse audio systems.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -296,6 +299,7 @@
     in [
       (pkgs-stable.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
       lafayette-mono-font
+      pkgs-stable.roboto
     ];
 
   # Enable OpenGL
