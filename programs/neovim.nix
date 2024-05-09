@@ -4,7 +4,7 @@ let
   binpath = lib.makeBinPath (with pkgs; [
     lua-language-server
     stylua
-    lua # required for luarocks.nvim to work
+    luajit # required for luarocks.nvim to work
     nil # nix-ls
     nixfmt
 
@@ -15,7 +15,7 @@ let
     python3Packages.jupytext
   ]);
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
-    extraLuaPackages = p: [ p.magick ];
+    extraLuaPackages = p: [ p.magick ]; # I can't have luarocks.nvim install it b/c that version will not find imagemagick c binary
     extraPython3Packages = p:
       with p; [
         pynvim
