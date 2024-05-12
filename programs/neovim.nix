@@ -6,7 +6,7 @@ let
     stylua
     luajit # required for luarocks.nvim to work
     nil # nix-ls
-    nixfmt
+    nixfmt-rfc-style
 
     nodePackages.prettier
     nodePackages.pyright
