@@ -42,11 +42,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1715479246,
-        "narHash": "sha256-4cOhXaKhlI/nJ0njYNTABJBRVJo142+F0nJNF46japU=",
+        "lastModified": 1715649601,
+        "narHash": "sha256-c/2DX9ZfadlNpByGrOFLO3kKDrkstgxcjPC9A2dvm8Q=",
         "ref": "main",
-        "rev": "674e4311fb3e1986660eae22f295ac6911b48d27",
-        "revCount": 14,
+        "rev": "a6280209f32e1cc23f2c6870b10c4b4eb8d05505",
+        "revCount": 20,
         "type": "git",
         "url": "ssh://git@github.com/benlubas/LafayetteMono.git"
       },
@@ -59,11 +59,11 @@
     "neovim-nightly-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1714568902,
-        "narHash": "sha256-AJdYiGeW4g0eZn1K3qw9OeLRX/d/6kfsbRCq4qPRS2o=",
+        "lastModified": 1715871478,
+        "narHash": "sha256-TpLwuaoK/S4Db76KITBFVOViKNY+DUv7KLtCxudpdo8=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "0b8a72b73934d33a05e20c255298e88cd921df32",
+        "rev": "4b029163345333a2c6975cd0dace6613b036ae47",
         "type": "github"
       },
       "original": {
@@ -106,11 +106,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1714253743,
-        "narHash": "sha256-mdTQw2XlariysyScCv2tTE45QSU9v/ezLcHJ22f0Nxc=",
+        "lastModified": 1717196966,
+        "narHash": "sha256-yZKhxVIKd2lsbOqYd5iDoUIwsRZFqE87smE2Vzf6Ck0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "58a1abdbae3217ca6b702f03d3b35125d88a2994",
+        "rev": "57610d2f8f0937f39dbd72251e9614b1561942d8",
         "type": "github"
       },
       "original": {

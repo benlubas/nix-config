@@ -38,11 +38,11 @@ let
 in {
   nixpkgs.overlays = [
     (_: super: {
-      neovim-nightly = pkgs.wrapNeovimUnstable
-        (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
-          buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
-          src = neovim-nightly-src;
-        })) fullConfig;
+      # neovim-nightly = pkgs.wrapNeovimUnstable
+      #   (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
+      #     buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
+      #     src = neovim-nightly-src;
+      #   })) fullConfig;
       neovim-stable = pkgs.wrapNeovimUnstable
         (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
           buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
@@ -51,7 +51,9 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
-    neovim-nightly
-    (writeScriptBin "nvim_stable" ''${neovim-stable}/bin/nvim "$@"'')
+    neovim-stable
+    # nightly fails to build right now
+    # neovim-nightly
+    # (writeScriptBin "nvim_stable" ''${neovim-stable}/bin/nvim "$@"'')
   ];
 }
