@@ -3,15 +3,18 @@
 let
   binpath = lib.makeBinPath (with pkgs; [
     lua-language-server
-    stylua
-    luajit # required for luarocks.nvim to work
+    pyright
     nil # nix-ls
+
+    stylua
+    nodePackages.prettier
     nixfmt-rfc-style
 
-    nodePackages.prettier
-    nodePackages.pyright
+    lua5_1
+    luajit # required for luarocks.nvim to work
+    luarocks
 
-    # I can't install this with the rest of the python packages b/c this needs to be in path
+    # I can't install this with the rest of the python packages b/c it's used from path
     python3Packages.jupytext
   ]);
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
@@ -24,7 +27,6 @@ let
         ipython
         nbformat
       ];
-    extraPackages = p: with p; [ imagemagick gcc ];
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
