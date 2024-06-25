@@ -30,6 +30,9 @@
 
     lafayette-mono.url =
       "git+ssh://git@github.com/benlubas/LafayetteMono.git?ref=main";
+
+    op-mono.url =
+      "git+ssh://git@github.com/benlubas/op-mono.git?ref=main";
   };
 
   # `outputs` are all the build result of the flake.

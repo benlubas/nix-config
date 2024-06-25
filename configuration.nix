@@ -2,12 +2,23 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, pkgs-stable, lafayette-mono, ... }:
+{
+  config,
+  pkgs,
+  pkgs-stable,
+  lafayette-mono,
+  op-mono,
+  ...
+}:
 
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
-  imports = [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
@@ -58,23 +69,20 @@
       user = "benlubas";
       dataDir = "/home/benlubas/notes"; # Default folder for new synced folders
       configDir = "/home/benlubas/.config/syncthing";
-      overrideDevices =
-        true; # overrides any devices added or deleted through the WebUI
-      overrideFolders =
-        true; # overrides any folders added or deleted through the WebUI
+      overrideDevices = true; # overrides any devices added or deleted through the WebUI
+      overrideFolders = true; # overrides any folders added or deleted through the WebUI
       settings = {
         devices = {
           "s22" = {
-            id =
-              "ZIV6ZCV-XOOJHCB-UOQXICZ-H22CH3E-T4C6YJH-674JDUM-4QXN7YV-25ALWQT";
+            id = "ZIV6ZCV-XOOJHCB-UOQXICZ-H22CH3E-T4C6YJH-674JDUM-4QXN7YV-25ALWQT";
           };
           "MacBookAir" = {
-            id =
-              "UAHJ72Y-GFBAEJD-EJ22EZS-X6T3FRI-2GPTNNM-JWBSZG4-ROCFHMI-RWJCNAZ";
+            id = "UAHJ72Y-GFBAEJD-EJ22EZS-X6T3FRI-2GPTNNM-JWBSZG4-ROCFHMI-RWJCNAZ";
           };
         };
         folders = {
-          "Notes" = { # Name of folder in Syncthing, also the folder ID
+          "Notes" = {
+            # Name of folder in Syncthing, also the folder ID
             path = "/home/benlubas/notes"; # Which folder to add to Syncthing
             devices = [ "s22" ]; # Which devices to share the folder with
           };
@@ -120,12 +128,16 @@
       layout = "us";
     };
 
-    desktopManager = { xterm.enable = false; };
+    desktopManager = {
+      xterm.enable = false;
+    };
 
     autoRepeatDelay = 250;
     autoRepeatInterval = 22;
     displayManager = {
-      lightdm = { enable = true; };
+      lightdm = {
+        enable = true;
+      };
     };
 
     windowManager.i3 = {
@@ -187,9 +199,13 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     description = "Ben Lubas";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs;
-    # unstable packages:
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
+    packages =
+      with pkgs;
+      # unstable packages:
       [
         blender
         brave
@@ -204,24 +220,27 @@
         # wine64
         typst
 
-      ] ++
-      # stable packages
-      (with pkgs-stable; [
-        ffmpeg_6-full
-        flameshot
-        globalprotect-openconnect
-        imagemagick
-        inkscape
-        iruby
-        lazygit
-        losslesscut-bin
-        neofetch
-        obs-studio
-        fontforge-gtk
-        quarto
-        wine64
-        vlc
-      ]);
+      ]
+      ++
+        # stable packages
+        (with pkgs-stable; [
+          dict
+          ffmpeg_6-full
+          flameshot
+          globalprotect-openconnect
+          imagemagick
+          inkscape
+          iruby
+          lazygit
+          losslesscut-bin
+          neofetch
+          numbat
+          obs-studio
+          fontforge-gtk
+          quarto
+          wine64
+          vlc
+        ]);
   };
 
   # Allow unfree packages
@@ -245,12 +264,19 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
 
-  environment.systemPackages = with pkgs-stable;
+  environment.systemPackages =
+    with pkgs-stable;
     let
       R-with-packages = rWrapper.override {
-        packages = with rPackages; [ xml2 lintr roxygen2 languageserver ];
+        packages = with rPackages; [
+          xml2
+          lintr
+          roxygen2
+          languageserver
+        ];
       };
-    in [
+    in
+    [
       # STABLE PACKAGES
       R
       R-with-packages
@@ -289,7 +315,8 @@
       valgrind
       wget
       xclip
-    ] ++ (with pkgs; [
+    ]
+    ++ (with pkgs; [
       # UNSTABLE PACKAGES
       tmux
       steam-run
@@ -303,19 +330,22 @@
     ]);
 
   fonts.packages =
-    let lafayette-mono-font = lafayette-mono.packages.${pkgs.system}.default;
-    in [
+    let
+      lafayette-mono-font = lafayette-mono.packages.${pkgs.system}.default;
+      op-mono-font = op-mono.packages.${pkgs.system}.default;
+    in
+    [
       (pkgs-stable.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
       lafayette-mono-font
+      op-mono-font
       pkgs-stable.roboto
     ];
 
   # Enable OpenGL
   # required for: kitty
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
   # Load nvidia driver for Xorg and Wayland

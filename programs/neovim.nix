@@ -55,7 +55,6 @@ in {
   environment.systemPackages = with pkgs; [
     neovim-stable
     # nightly fails to build right now
-    # neovim-nightly
-    # (writeScriptBin "nvim_stable" ''${neovim-stable}/bin/nvim "$@"'')
+    # (writeScriptBin "nvim_nightly" ''${neovim-nightly}/bin/nvim "$@"'')
   ];
 }
