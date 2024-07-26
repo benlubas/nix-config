@@ -31,7 +31,7 @@ let
     withRuby = true;
     withPython3 = true;
     # https://github.com/NixOS/nixpkgs/issues/211998
-    customRC = "luafile ~/.config/nvim/init.lua";
+    luaRcContent = "vim.cmd.source(('~/.config/%s/init.lua'):format(vim.env.NVIM_APPNAME or 'nvim'))";
   };
   fullConfig = (neovimConfig // {
     wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs
