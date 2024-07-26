@@ -18,7 +18,10 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     # Spicetify flake
-    spicetify-nix.url = "github:the-argus/spicetify-nix";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Source to build neovim. Current (as of 2024/03/24) crashes
     # this is consumed in ./programs/neovim.nix

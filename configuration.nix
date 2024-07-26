@@ -163,7 +163,6 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = false; # this is apparently meant for pulse audio systems.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
