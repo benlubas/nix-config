@@ -30,6 +30,7 @@
       url = "github:neovim/neovim";
       flake = false;
     };
+    neorg-overlay.url = "github:nvim-neorg/nixpkgs-neorg-overlay";
 
     lafayette-mono.url =
       "git+ssh://git@github.com/benlubas/LafayetteMono.git?ref=main";

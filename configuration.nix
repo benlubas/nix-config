@@ -6,10 +6,8 @@
   config,
   pkgs,
   pkgs-stable,
-  lafayette-mono,
-  op-mono,
   ...
-}:
+}@inputs:
 
 {
   nix.settings.experimental-features = [
@@ -22,8 +20,12 @@
     ./hardware-configuration.nix
   ];
 
-  # Bootloader
+  # overlays
+  nixpkgs.overlays = [
+    inputs.neorg-overlay.overlays.default
+  ];
 
+  # Bootloader
   boot.loader = {
     efi = {
       canTouchEfiVariables = true;
@@ -237,6 +239,7 @@
           obs-studio
           fontforge-gtk
           quarto
+          sccache
           wine64
           vlc
         ]);
@@ -314,6 +317,7 @@
       valgrind
       wget
       xclip
+      zig
     ]
     ++ (with pkgs; [
       # UNSTABLE PACKAGES
@@ -330,8 +334,8 @@
 
   fonts.packages =
     let
-      lafayette-mono-font = lafayette-mono.packages.${pkgs.system}.default;
-      op-mono-font = op-mono.packages.${pkgs.system}.default;
+      lafayette-mono-font = inputs.lafayette-mono.packages.${pkgs.system}.default;
+      op-mono-font = inputs.op-mono.packages.${pkgs.system}.default;
     in
     [
       (pkgs-stable.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })

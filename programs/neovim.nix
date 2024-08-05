@@ -1,43 +1,71 @@
-{ lib, pkgs, neovim-nightly-src, ... }:
+{
+  lib,
+  pkgs,
+  # neovim-nightly-src,
+  ...
+}:
 
 let
-  binpath = lib.makeBinPath (with pkgs; [
-    lua-language-server
-    pyright
-    nil # nix-ls
+  binpath = lib.makeBinPath (
+    with pkgs;
+    [
+      lua-language-server
+      pyright
+      nil # nix-ls
 
-    stylua
-    nodePackages.prettier
-    nixfmt-rfc-style
+      stylua
+      nodePackages.prettier
+      nixfmt-rfc-style
+      taplo # toml formatter
 
-    lua5_1
-    luajit # required for luarocks.nvim to work
-    luarocks
+      lua5_1
+      luajit # required for luarocks.nvim to work
+      luarocks
 
-    # I can't install this with the rest of the python packages b/c it's used from path
-    python3Packages.jupytext
-  ]);
+      # I can't install this with the rest of the python packages b/c it's used from path
+      python3Packages.jupytext
+    ]
+  );
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     extraLuaPackages = p: [ p.magick ]; # I can't have luarocks.nvim install it b/c that version will not find imagemagick c binary
-    extraPython3Packages = p:
-      with p; [
+    extraPython3Packages =
+      p: with p; [
         pynvim
         jupyter-client
         cairosvg
         ipython
         nbformat
       ];
+    plugins = with pkgs.vimPlugins; [
+      # the below is preferable to `nvim-treesitter.withAllGrammars` for performance reasons
+      # nvim-treesitter.withAllGrammars
+      {
+        plugin = pkgs.symlinkJoin {
+          name = "nvim-treesitter";
+          paths = [
+            nvim-treesitter.withAllGrammars
+            nvim-treesitter.withAllGrammars.dependencies
+          ];
+        };
+        optional = false;
+      }
+    ];
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
-    # https://github.com/NixOS/nixpkgs/issues/211998
-    luaRcContent = "vim.cmd.source(('~/.config/%s/init.lua'):format(vim.env.NVIM_APPNAME or 'nvim'))";
+    luaRcContent = /*lua*/ ''
+      vim.g.nix_packdir = "${pkgs.vimUtils.packDir pkgs.neovim-stable.passthru.packpathDirs}"
+      vim.cmd.source(('~/.config/%s/init.lua'):format(vim.env.NVIM_APPNAME or 'nvim'))
+    '';
   };
-  fullConfig = (neovimConfig // {
-    wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs
-      + " --prefix PATH : ${binpath}";
-  });
-in {
+  fullConfig = (
+    neovimConfig
+    // {
+      wrapperArgs = lib.escapeShellArgs neovimConfig.wrapperArgs + " --prefix PATH : ${binpath}";
+    }
+  );
+in
+{
   nixpkgs.overlays = [
     (_: super: {
       # neovim-nightly = pkgs.wrapNeovimUnstable
@@ -45,10 +73,9 @@ in {
       #     buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
       #     src = neovim-nightly-src;
       #   })) fullConfig;
-      neovim-stable = pkgs.wrapNeovimUnstable
-        (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
-          buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
-        })) fullConfig;
+      neovim-stable = pkgs.wrapNeovimUnstable (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
+        buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
+      })) fullConfig;
     })
   ];
 
