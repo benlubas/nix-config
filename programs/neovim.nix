@@ -38,7 +38,6 @@ let
       ];
     plugins = with pkgs.vimPlugins; [
       # the below is preferable to `nvim-treesitter.withAllGrammars` for performance reasons
-      # nvim-treesitter.withAllGrammars
       {
         plugin = pkgs.symlinkJoin {
           name = "nvim-treesitter";

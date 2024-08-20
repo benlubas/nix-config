@@ -21,9 +21,7 @@
   ];
 
   # overlays
-  nixpkgs.overlays = [
-    inputs.neorg-overlay.overlays.default
-  ];
+  nixpkgs.overlays = [ inputs.neorg-overlay.overlays.default ];
 
   # Bootloader
   boot.loader = {
@@ -318,6 +316,10 @@
       wget
       xclip
       zig
+
+      (inputs.plover-flake.packages.${pkgs.system}.plover.with-plugins (
+        ps: with ps; [ plover-lapwing-aio ]
+      ))
     ]
     ++ (with pkgs; [
       # UNSTABLE PACKAGES

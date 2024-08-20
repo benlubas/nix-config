@@ -23,6 +23,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    plover-flake.url = "github:dnaq/plover-flake";
+
     # Source to build neovim. Current (as of 2024/03/24) crashes
     # this is consumed in ./programs/neovim.nix
     neovim-nightly-src = {
