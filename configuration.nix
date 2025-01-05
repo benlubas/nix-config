@@ -38,6 +38,7 @@
       # but must be set to some value in order to pass an assert in grub.nix)
       devices = [ "nodev" ];
       efiSupport = true;
+      configurationLimit = 8;
       enable = true;
       # set $FS_UUID to the UUID of the EFI partition
       extraEntries = ''
@@ -56,11 +57,9 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
-  # Perform garbage collection weekly to maintain low disk usage
   nix.gc = {
     automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 2w";
+    options = "--delete-older-than 14d";
   };
 
   services = {
@@ -163,7 +162,7 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -201,11 +200,14 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "dialout"
+      "uucp"
     ];
     packages =
       with pkgs;
       # unstable packages:
       [
+        lua51Packages.nlua
         blender
         brave
         btop
@@ -215,17 +217,20 @@
         kitty
         pandoc
         qmk
+        typst
         wine
         # wine64
-        typst
-
       ]
       ++
         # stable packages
         (with pkgs-stable; [
+          anki
           dict
           ffmpeg_6-full
           flameshot
+          fontforge-gtk
+          discord
+          gimp
           globalprotect-openconnect
           imagemagick
           inkscape
@@ -233,25 +238,79 @@
           lazygit
           losslesscut-bin
           neofetch
+          mermaid-cli
           numbat
           obs-studio
-          fontforge-gtk
+          prismlauncher
           quarto
           sccache
-          wine64
+          sqlite
           vlc
+          vmware-horizon-client
+          wine64
         ]);
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # HACK: to get around dynamic linking issues I think
-  # programs.nix-ld.enable = true;
-  # programs.nix-ld.libraries = with pkgs; [
-  #   # Add any missing dynamic libraries for unpackaged programs
-  #   # here, NOT in environment.systemPackages
-  # ];
+  # to let dynamically linked libs to work
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
+    # list taken from: https://github.com/Mic92/dotfiles/blob/393539385b0abfc3618e886cd0bf545ac24aeb67/machines/modules/nix-ld.nix#L4
+    alsa-lib
+    at-spi2-atk
+    at-spi2-core
+    atk
+    cairo
+    cups
+    curl
+    dbus
+    expat
+    fontconfig
+    freetype
+    fuse3
+    gdk-pixbuf
+    glib
+    gtk3
+    icu
+    libGL
+    libappindicator-gtk3
+    libdrm
+    libglvnd
+    libnotify
+    libpulseaudio
+    libunwind
+    libusb1
+    libuuid
+    libxkbcommon
+    libxml2
+    mesa
+    nspr
+    nss
+    openssl
+    pango
+    pipewire
+    stdenv.cc.cc
+    systemd
+    vulkan-loader
+    xorg.libX11
+    xorg.libXScrnSaver
+    xorg.libXcomposite
+    xorg.libXcursor
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXi
+    xorg.libXrandr
+    xorg.libXrender
+    xorg.libXtst
+    xorg.libxcb
+    xorg.libxkbfile
+    xorg.libxshmfence
+    zlib
+  ];
 
   # install flatpack (for flatpack discord)
   services.flatpak.enable = true;
@@ -296,8 +355,10 @@
       gdb
       git
       gnumake
+      go
       gparted
       jdk17
+      jq
       killall
       libcxxStdenv
       libstdcxx5
@@ -320,6 +381,8 @@
       (inputs.plover-flake.packages.${pkgs.system}.plover.with-plugins (
         ps: with ps; [ plover-lapwing-aio ]
       ))
+
+      inputs.ghostty.packages.x86_64-linux.default
     ]
     ++ (with pkgs; [
       # UNSTABLE PACKAGES

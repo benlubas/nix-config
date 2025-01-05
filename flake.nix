@@ -39,6 +39,8 @@
 
     op-mono.url =
       "git+ssh://git@github.com/benlubas/op-mono.git?ref=main";
+
+    ghostty.url = "github:ghostty-org/ghostty";
   };
 
   # `outputs` are all the build result of the flake.

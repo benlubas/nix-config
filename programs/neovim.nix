@@ -12,6 +12,7 @@ let
       lua-language-server
       pyright
       nil # nix-ls
+      gopls
 
       stylua
       nodePackages.prettier
@@ -52,6 +53,7 @@ let
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
+    python3Env = pkgs.python312;
     luaRcContent = /*lua*/ ''
       vim.g.nix_packdir = "${pkgs.vimUtils.packDir pkgs.neovim-stable.passthru.packpathDirs}"
       vim.cmd.source(('~/.config/%s/init.lua'):format(vim.env.NVIM_APPNAME or 'nvim'))
