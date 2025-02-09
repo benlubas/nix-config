@@ -341,9 +341,9 @@
       R-with-packages
       appimage-run
       bat
-      cinnamon.nemo # gui file browser
+      nemo # gui file browser
       clang
-      clang-tools_9
+      clang-tools
       curl
       dunst
       efibootmgr
@@ -363,7 +363,6 @@
       libcxxStdenv
       libstdcxx5
       libusb1
-      nodejs
       ntfs3g
       openssl
       python3
@@ -378,10 +377,6 @@
       xclip
       zig
 
-      (inputs.plover-flake.packages.${pkgs.system}.plover.with-plugins (
-        ps: with ps; [ plover-lapwing-aio ]
-      ))
-
       inputs.ghostty.packages.x86_64-linux.default
     ]
     ++ (with pkgs; [
@@ -391,6 +386,7 @@
       rustup
       jujutsu
       firefox
+      nodejs_22
       fd
       direnv
       delta

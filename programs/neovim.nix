@@ -1,7 +1,7 @@
 {
   lib,
   pkgs,
-  # neovim-nightly-src,
+  neovim-nightly-overlay,
   ...
 }:
 
@@ -10,9 +10,11 @@ let
     with pkgs;
     [
       lua-language-server
+      typescript-language-server
       pyright
       nil # nix-ls
       gopls
+      vscode-langservers-extracted # css, html, json, eslint
 
       stylua
       nodePackages.prettier
@@ -53,7 +55,6 @@ let
     withNodeJs = true;
     withRuby = true;
     withPython3 = true;
-    python3Env = pkgs.python312;
     luaRcContent = /*lua*/ ''
       vim.g.nix_packdir = "${pkgs.vimUtils.packDir pkgs.neovim-stable.passthru.packpathDirs}"
       vim.cmd.source(('~/.config/%s/init.lua'):format(vim.env.NVIM_APPNAME or 'nvim'))
@@ -69,20 +70,18 @@ in
 {
   nixpkgs.overlays = [
     (_: super: {
-      # neovim-nightly = pkgs.wrapNeovimUnstable
-      #   (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
-      #     buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
-      #     src = neovim-nightly-src;
-      #   })) fullConfig;
-      neovim-stable = pkgs.wrapNeovimUnstable (super.neovim-unwrapped.overrideAttrs (oldAttrs: {
-        buildInputs = oldAttrs.buildInputs ++ [ super.tree-sitter ];
-      })) fullConfig;
+      neovim-nightly =
+        pkgs.wrapNeovimUnstable (neovim-nightly-overlay.packages.${pkgs.system}.default.overrideAttrs (oldAttrs: {
+          buildInputs = oldAttrs.buildInputs ++ [super.tree-sitter];
+        }))
+        fullConfig;
+      neovim-stable = pkgs.wrapNeovimUnstable super.neovim-unwrapped fullConfig;
     })
   ];
 
   environment.systemPackages = with pkgs; [
     neovim-stable
     # nightly fails to build right now
-    # (writeScriptBin "nvim_nightly" ''${neovim-nightly}/bin/nvim "$@"'')
+    (writeScriptBin "nightly" ''${neovim-nightly}/bin/nvim "$@"'')
   ];
 }

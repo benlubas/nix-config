@@ -15,7 +15,7 @@
     # Official NixOS package source, using nixos-unstable branch here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     # Spicetify flake
     spicetify-nix = {
@@ -23,15 +23,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    plover-flake.url = "github:dnaq/plover-flake";
-
-    # Source to build neovim. Current (as of 2024/03/24) crashes
-    # this is consumed in ./programs/neovim.nix
-    neovim-nightly-src = {
-      # url = "github:neovim/neovim/dc7ccd6bca81dfa6ade6462a6e30770c63d48266";
-      url = "github:neovim/neovim";
-      flake = false;
-    };
+    # used in ./programs/neovim.nix
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neorg-overlay.url = "github:nvim-neorg/nixpkgs-neorg-overlay";
 
     lafayette-mono.url =
