@@ -152,6 +152,7 @@
   services.libinput = {
     enable = true;
     mouse.accelProfile = "flat"; # disabling mouse acceleration
+    mouse.middleEmulation = false;
   };
 
   services.displayManager = {
@@ -317,7 +318,7 @@
   xdg.portal = {
     enable = true;
     config.common.default = "*";
-    extraPortals = [ pkgs.xdg-desktop-portal-kde ];
+    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
   };
 
   # List packages installed in system profile. To search, run:
@@ -377,7 +378,9 @@
       xclip
       zig
 
+      # FLAKE PACKAGES
       inputs.ghostty.packages.x86_64-linux.default
+      inputs.norgolith.packages.x86_64-linux.default
     ]
     ++ (with pkgs; [
       # UNSTABLE PACKAGES

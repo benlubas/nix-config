@@ -18,7 +18,7 @@ in
   programs.spicetify = {
     enable = true;
     theme = spicePkgs.themes.text;
-    colorScheme = "dark";
+    colorScheme = "RosePine";
 
     enabledExtensions = with spicePkgs.extensions; [
       fullAppDisplay

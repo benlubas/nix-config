@@ -34,6 +34,8 @@
       "git+ssh://git@github.com/benlubas/op-mono.git?ref=main";
 
     ghostty.url = "github:ghostty-org/ghostty";
+
+    norgolith.url = "github:NTBBloodbath/norgolith";
   };
 
   # `outputs` are all the build result of the flake.
