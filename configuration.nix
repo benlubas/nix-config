@@ -214,13 +214,11 @@
         btop
         gh
         google-chrome
-        heroic
         kitty
         pandoc
         qmk
         typst
-        wine
-        # wine64
+        omnissa-horizon-client
       ]
       ++
         # stable packages
@@ -232,86 +230,74 @@
           fontforge-gtk
           discord
           gimp
-          globalprotect-openconnect
+          heroic
           imagemagick
-          inkscape
-          iruby
-          lazygit
-          losslesscut-bin
-          neofetch
-          mermaid-cli
-          numbat
           obs-studio
-          prismlauncher
           quarto
-          sccache
           sqlite
           vlc
-          vmware-horizon-client
-          wine64
         ]);
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # to let dynamically linked libs to work
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
-    # list taken from: https://github.com/Mic92/dotfiles/blob/393539385b0abfc3618e886cd0bf545ac24aeb67/machines/modules/nix-ld.nix#L4
-    alsa-lib
-    at-spi2-atk
-    at-spi2-core
-    atk
-    cairo
-    cups
-    curl
-    dbus
-    expat
-    fontconfig
-    freetype
-    fuse3
-    gdk-pixbuf
-    glib
-    gtk3
-    icu
-    libGL
-    libappindicator-gtk3
-    libdrm
-    libglvnd
-    libnotify
-    libpulseaudio
-    libunwind
-    libusb1
-    libuuid
-    libxkbcommon
-    libxml2
-    mesa
-    nspr
-    nss
-    openssl
-    pango
-    pipewire
-    stdenv.cc.cc
-    systemd
-    vulkan-loader
-    xorg.libX11
-    xorg.libXScrnSaver
-    xorg.libXcomposite
-    xorg.libXcursor
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXi
-    xorg.libXrandr
-    xorg.libXrender
-    xorg.libXtst
-    xorg.libxcb
-    xorg.libxkbfile
-    xorg.libxshmfence
-    zlib
-  ];
+  # # to let dynamically linked libs to work
+  # programs.nix-ld.enable = true;
+  # programs.nix-ld.libraries = with pkgs; [
+  #   # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
+  #   # list taken from: https://github.com/Mic92/dotfiles/blob/393539385b0abfc3618e886cd0bf545ac24aeb67/machines/modules/nix-ld.nix#L4
+  #   alsa-lib
+  #   at-spi2-atk
+  #   at-spi2-core
+  #   atk
+  #   cairo
+  #   cups
+  #   curl
+  #   dbus
+  #   expat
+  #   fontconfig
+  #   freetype
+  #   fuse3
+  #   gdk-pixbuf
+  #   glib
+  #   gtk3
+  #   icu
+  #   libGL
+  #   libappindicator-gtk3
+  #   libdrm
+  #   libglvnd
+  #   libnotify
+  #   libpulseaudio
+  #   libunwind
+  #   libusb1
+  #   libuuid
+  #   libxkbcommon
+  #   mesa
+  #   nspr
+  #   nss
+  #   openssl
+  #   pango
+  #   pipewire
+  #   stdenv.cc.cc
+  #   systemd
+  #   vulkan-loader
+  #   xorg.libX11
+  #   xorg.libXScrnSaver
+  #   xorg.libXcomposite
+  #   xorg.libXcursor
+  #   xorg.libXdamage
+  #   xorg.libXext
+  #   xorg.libXfixes
+  #   xorg.libXi
+  #   xorg.libXrandr
+  #   xorg.libXrender
+  #   xorg.libXtst
+  #   xorg.libxcb
+  #   xorg.libxkbfile
+  #   xorg.libxshmfence
+  #   zlib
+  # ];
 
   # install flatpack (for flatpack discord)
   services.flatpak.enable = true;
@@ -326,20 +312,8 @@
 
   environment.systemPackages =
     with pkgs-stable;
-    let
-      R-with-packages = rWrapper.override {
-        packages = with rPackages; [
-          xml2
-          lintr
-          roxygen2
-          languageserver
-        ];
-      };
-    in
     [
       # STABLE PACKAGES
-      R
-      R-with-packages
       appimage-run
       bat
       nemo # gui file browser
@@ -377,6 +351,8 @@
       wget
       xclip
       zig
+      direnv
+      nodejs_22
 
       # FLAKE PACKAGES
       inputs.ghostty.packages.x86_64-linux.default
@@ -389,9 +365,7 @@
       rustup
       jujutsu
       firefox
-      nodejs_22
       fd
-      direnv
       delta
       cargo
     ]);

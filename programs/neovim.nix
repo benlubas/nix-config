@@ -2,6 +2,7 @@
   lib,
   pkgs,
   neovim-nightly-overlay,
+  inputs,
   ...
 }:
 
@@ -77,6 +78,7 @@ in
         fullConfig;
       neovim-stable = pkgs.wrapNeovimUnstable super.neovim-unwrapped fullConfig;
     })
+    (import ./treesitterMain.nix { inherit inputs; })
   ];
 
   environment.systemPackages = with pkgs; [

@@ -26,6 +26,10 @@
     # used in ./programs/neovim.nix
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neorg-overlay.url = "github:nvim-neorg/nixpkgs-neorg-overlay";
+    nvim-treesitter = { # TS main branch
+      url = "github:nvim-treesitter/nvim-treesitter/main";
+      flake = false;
+    };
 
     lafayette-mono.url =
       "git+ssh://git@github.com/benlubas/LafayetteMono.git?ref=main";
