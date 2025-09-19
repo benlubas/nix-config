@@ -18,15 +18,15 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     # Spicetify flake
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # spicetify-nix = {
+    #   url = "github:Gerg-L/spicetify-nix";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     # used in ./programs/neovim.nix
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neorg-overlay.url = "github:nvim-neorg/nixpkgs-neorg-overlay";
-    nvim-treesitter = { # TS main branch
+    nvim-treesitter-main = { # TS main branch
       url = "github:nvim-treesitter/nvim-treesitter/main";
       flake = false;
     };
@@ -120,7 +120,7 @@
           # old configuration file can still take effect.
           # Note: configuration.nix itself is also a Nix Module,
           ./configuration.nix
-          ./programs/spicetify.nix
+          # ./programs/spicetify.nix
           ./programs/neovim.nix
         ];
       };

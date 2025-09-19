@@ -57,6 +57,8 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
+  programs.adb.enable = true;
+
   nix.gc = {
     automatic = true;
     options = "--delete-older-than 14d";
@@ -203,6 +205,8 @@
       "wheel"
       "dialout"
       "uucp"
+      "adbusers" # these two required for grapheneos
+      "kvm" # _/
     ];
     packages =
       with pkgs;
@@ -214,6 +218,7 @@
         btop
         gh
         google-chrome
+        heroic
         kitty
         pandoc
         qmk
@@ -223,16 +228,19 @@
       ++
         # stable packages
         (with pkgs-stable; [
-          anki
+          (pkgs.anki.withAddons [
+            pkgs.ankiAddons.adjust-sound-volume
+          ])
           dict
           ffmpeg_6-full
           flameshot
           fontforge-gtk
           discord
           gimp
-          heroic
           imagemagick
           obs-studio
+          kdePackages.okular # PDF editor
+          prismlauncher
           quarto
           sqlite
           vlc
@@ -242,69 +250,73 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # # to let dynamically linked libs to work
-  # programs.nix-ld.enable = true;
-  # programs.nix-ld.libraries = with pkgs; [
-  #   # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
-  #   # list taken from: https://github.com/Mic92/dotfiles/blob/393539385b0abfc3618e886cd0bf545ac24aeb67/machines/modules/nix-ld.nix#L4
-  #   alsa-lib
-  #   at-spi2-atk
-  #   at-spi2-core
-  #   atk
-  #   cairo
-  #   cups
-  #   curl
-  #   dbus
-  #   expat
-  #   fontconfig
-  #   freetype
-  #   fuse3
-  #   gdk-pixbuf
-  #   glib
-  #   gtk3
-  #   icu
-  #   libGL
-  #   libappindicator-gtk3
-  #   libdrm
-  #   libglvnd
-  #   libnotify
-  #   libpulseaudio
-  #   libunwind
-  #   libusb1
-  #   libuuid
-  #   libxkbcommon
-  #   mesa
-  #   nspr
-  #   nss
-  #   openssl
-  #   pango
-  #   pipewire
-  #   stdenv.cc.cc
-  #   systemd
-  #   vulkan-loader
-  #   xorg.libX11
-  #   xorg.libXScrnSaver
-  #   xorg.libXcomposite
-  #   xorg.libXcursor
-  #   xorg.libXdamage
-  #   xorg.libXext
-  #   xorg.libXfixes
-  #   xorg.libXi
-  #   xorg.libXrandr
-  #   xorg.libXrender
-  #   xorg.libXtst
-  #   xorg.libxcb
-  #   xorg.libxkbfile
-  #   xorg.libxshmfence
-  #   zlib
-  # ];
+  # to let dynamically linked libs to work
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # Add any missing dynamic libraries for unpackaged programs here, NOT in environment.systemPackages
+    # list taken from: https://github.com/Mic92/dotfiles/blob/393539385b0abfc3618e886cd0bf545ac24aeb67/machines/modules/nix-ld.nix#L4
+    alsa-lib
+    at-spi2-atk
+    at-spi2-core
+    atk
+    cairo
+    cups
+    curl
+    dbus
+    expat
+    fontconfig
+    freetype
+    fuse3
+    gdk-pixbuf
+    glib
+    gtk3
+    icu
+    libGL
+    libappindicator-gtk3
+    libdrm
+    libglvnd
+    libnotify
+    libpulseaudio
+    libunwind
+    libusb1
+    libuuid
+    libxkbcommon
+    mesa
+    nspr
+    nss
+    # openssl
+    openssl.dev
+    pango
+    pipewire
+    stdenv.cc.cc
+    systemd
+    vulkan-loader
+    xorg.libX11
+    xorg.libXScrnSaver
+    xorg.libXcomposite
+    xorg.libXcursor
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXi
+    xorg.libXrandr
+    xorg.libXrender
+    xorg.libXtst
+    xorg.libxcb
+    xorg.libxkbfile
+    xorg.libxshmfence
+    zlib
+  ];
 
-  # install flatpack (for flatpack discord)
+  # install flatpack (for flatpack discord + hytale)
   services.flatpak.enable = true;
   xdg.portal = {
     enable = true;
     config.common.default = "*";
-    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    extraPortals = [
+      pkgs.kdePackages.xdg-desktop-portal-kde
+      pkgs.xdg-desktop-portal-gtk
+    ];
   };
 
   # List packages installed in system profile. To search, run:
@@ -340,10 +352,12 @@
       libusb1
       ntfs3g
       openssl
+      pkg-config
       python3
       quickemu
       ripgrep
       stdenv
+      spotify
       texlive.combined.scheme-full
       tty-clock
       unzip

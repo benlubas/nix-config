@@ -676,14 +676,14 @@
         "type": "github"
       }
     },
-    "nvim-treesitter": {
+    "nvim-treesitter-main": {
       "flake": false,
       "locked": {
-        "lastModified": 1758135925,
-        "narHash": "sha256-BGz5nlUou8uQyAXDy63OkerTpIGhHWClXLfbu97bR1U=",
+        "lastModified": 1758554577,
+        "narHash": "sha256-B7p624oANI+Nr6cSmOOmzEzfKUPu7kh2JIYocMz+V/8=",
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter",
-        "rev": "8ab64a37ea56762dc0d1a6da2bba2d4af88e3594",
+        "rev": "5a70b1eb8cbdf6c7f0a59dfb7356ad198421b620",
         "type": "github"
       },
       "original": {
@@ -722,30 +722,8 @@
         "nixpkgs": "nixpkgs_8",
         "nixpkgs-stable": "nixpkgs-stable",
         "norgolith": "norgolith",
-        "nvim-treesitter": "nvim-treesitter",
-        "op-mono": "op-mono",
-        "spicetify-nix": "spicetify-nix"
-      }
-    },
-    "spicetify-nix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": "systems_6"
-      },
-      "locked": {
-        "lastModified": 1757824114,
-        "narHash": "sha256-cyVbc8UxyWKAuXOgqLggil2mXLZWY0wyfBWYqUwgYjM=",
-        "owner": "Gerg-L",
-        "repo": "spicetify-nix",
-        "rev": "d23584b2000b7f7a59a1764ff9ab93b89444bfd9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Gerg-L",
-        "repo": "spicetify-nix",
-        "type": "github"
+        "nvim-treesitter-main": "nvim-treesitter-main",
+        "op-mono": "op-mono"
       }
     },
     "systems": {
@@ -809,21 +787,6 @@
       }
     },
     "systems_5": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_6": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

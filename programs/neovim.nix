@@ -2,7 +2,7 @@
   lib,
   pkgs,
   neovim-nightly-overlay,
-  inputs,
+  nvim-treesitter-main,
   ...
 }:
 
@@ -42,16 +42,17 @@ let
       ];
     plugins = with pkgs.vimPlugins; [
       # the below is preferable to `nvim-treesitter.withAllGrammars` for performance reasons
-      {
-        plugin = pkgs.symlinkJoin {
-          name = "nvim-treesitter";
-          paths = [
-            nvim-treesitter.withAllGrammars
-            nvim-treesitter.withAllGrammars.dependencies
-          ];
-        };
-        optional = false;
-      }
+      # {
+      #   plugin = pkgs.symlinkJoin {
+      #     name = "nvim-treesitter";
+      #     paths = [
+      #       nvim-treesitter.withAllGrammars
+      #       nvim-treesitter.withAllGrammars.dependencies
+      #     ];
+      #   };
+      #   optional = false;
+      # }
+      nvim-treesitter.withAllGrammars
     ];
     withNodeJs = true;
     withRuby = true;
@@ -70,6 +71,7 @@ let
 in
 {
   nixpkgs.overlays = [
+    (import ./treesitterMain.nix { inherit nvim-treesitter-main; })
     (_: super: {
       neovim-nightly =
         pkgs.wrapNeovimUnstable (neovim-nightly-overlay.packages.${pkgs.system}.default.overrideAttrs (oldAttrs: {
@@ -78,7 +80,6 @@ in
         fullConfig;
       neovim-stable = pkgs.wrapNeovimUnstable super.neovim-unwrapped fullConfig;
     })
-    (import ./treesitterMain.nix { inherit inputs; })
   ];
 
   environment.systemPackages = with pkgs; [
